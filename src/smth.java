@@ -23,10 +23,10 @@ public class smth {
         }
     }
 
-    int[] computeArrTI(int[] arr, int digit) {
+    static int[] computeArrTI(int[] arr, int digit) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr.length; j++) {
-                if (j == i)
+                if (!(j == i))
                     if (arr[i] + arr[j] == digit) {
                         return new int[] { arr[i], arr[j] };
                     }
