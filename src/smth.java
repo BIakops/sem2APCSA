@@ -9,25 +9,17 @@ public class smth {
         c = 1f;
     }
 
-    void urMOM() {
-
-    }
-
-    void shit() {
-
-    }
-
-    void compute(int[] arr) {
+    public void computeSum(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             a += arr[i];
         }
     }
 
-    static int[] computeArrTI(int[] arr, int digit) {
+    static int[] computeDigitSummation(int[] arr, int digit) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr.length; j++) {
                 if (!(j == i))
-                    if (arr[i] + arr[j] == digit) {
+                    if (arr[i] + arr[j] == digit && i != j) {
                         return new int[] { arr[i], arr[j] };
                     }
 
@@ -36,6 +28,8 @@ public class smth {
         return null;
     }
 
+    /// 1, 2, 3, 4, 5, 6, 7
+    /// [0][1][2][3][4][5][6]
     int a() {
         return a;
     }
@@ -44,4 +38,9 @@ public class smth {
         return (int) b;
     }
 
+    public int fibo(int n) {
+        if (n == 0)
+            return 0;
+        return n + fibo(n - 1);
+    }
 }
