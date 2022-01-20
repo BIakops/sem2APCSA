@@ -1,3 +1,5 @@
+import java.lang.reflect.GenericArrayType;
+
 public class smth {
     public int a;
     public double b;
@@ -42,5 +44,34 @@ public class smth {
         if (n == 0)
             return 0;
         return n + fibo(n - 1);
+    }
+
+    public int calcSpain(String[] arr) {
+        int amt = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals("Spain")) {
+                amt++;
+            }
+        }
+
+        return amt;
+    }
+
+    public static double[] bigsmall(double[] arr) {
+        double min = Double.MIN_VALUE;
+        double max = Double.MAX_VALUE;
+        int minI = 0;
+        int maxI = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] < max)
+                max = arr[i];
+            maxI = i;
+            if (arr[i] > min)
+                min = arr[i];
+            minI = i;
+        }
+        System.out.println(maxI + ", " + minI);
+        return new double[] { maxI, minI };
     }
 }

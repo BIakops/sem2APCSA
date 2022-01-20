@@ -5,6 +5,6 @@ public class App {
         // smth s = new smth();
         // System.out.println(a[0] + " and " + a[1]);
         // System.out.println(s.fibo(5));
-        System.out.println(CodingBat.fizzBuzz(1, 6)[5]);
+        System.out.println(smth.bigsmall(new double[] { 0.0, -1, 15, 200 })[0]);
     }
 }
