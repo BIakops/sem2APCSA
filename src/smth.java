@@ -1,5 +1,4 @@
 
-
 public class smth {
     public int a;
     public double b;
