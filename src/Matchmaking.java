@@ -17,33 +17,28 @@ public class Matchmaking {
     }
   }
 
-  public static ArrayList<ArrayList<Integer>> groupNums(List<Integer> arr, int numbersInRow) { /// Testpls
+  public static ArrayList<ArrayList<Integer>> groupNums(List<Integer> arr) { /// Works now Jan 25 Push
     /// Sort thru document
 
-    ArrayList<ArrayList<Integer>> tempArr = new ArrayList<>();
-    List<Integer> sorted = maxBubbleSort(arr);
-    int prevInt = sorted.get(0);
-    ArrayList<Integer> temp = new ArrayList<Integer>();
-    for (int i = 0; i < sorted.size(); i++) {
-      if (prevInt == sorted.get(i)) {
-        temp.add(sorted.get(i));
+    ArrayList<ArrayList<Integer>> finalArray = new ArrayList<>();
+    int prevInt = arr.get(0);
+    ArrayList<Integer> temp = new ArrayList<>();
+    for (int i = 0; i < arr.size(); i++) {
+      if (arr.get(i) == prevInt) {
+        temp.add(arr.get(i));
       } else {
-        tempArr.add(temp);
+        
+        finalArray.add(new ArrayList<>( temp)); // Make sure it refrences a new arr not the current one, otherwise it'll rewrite.
+        if(DEBUG) System.out.println(finalArray + " " + prevInt);
         temp.clear();
-        temp.add(sorted.get(i));
+        temp.add(arr.get(i));
+        prevInt = arr.get(i);
       }
-      prevInt = sorted.get(i);
+      finalArray.add(new ArrayList<>(temp));
+      
     }
-    return tempArr;
-  }
-
-  public static void groupNumCheck(int i) {
-    ArrayList<ArrayList<Integer>> tempArr = createScores(i);
-    for (ArrayList<Integer> arr : tempArr) {
-      for (int js : arr) {
-        System.out.println(js);
-      }
-    }
+    if(DEBUG) System.out.println(finalArray);
+    return finalArray;
   }
 
   public static void RoundRobin(int numTeams, int teamsAdvancing) {
@@ -72,14 +67,10 @@ public class Matchmaking {
     );
   }
 
-  private static ArrayList<int[]> getScores(int numTeams) {
+  public static ArrayList<int[]> getScores(int numTeams) {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
-    for (
-      int i = 0;
-      i < Math.round((double) scores.size() / 2);
-      i++
-    ) { /// Iterate through half,
+    for (int i = 0;i < (int)Math.round(scores.size() / 2);i++) { /// Iterate through half,
       for (int j = 0; j < scores.get(i).size(); j++) {
         int[] tempArr = new int[numTeams];
         int lengthOfArr = 0;
@@ -89,9 +80,7 @@ public class Matchmaking {
         }
         int scoreIndex = i + 1;
         int currI = scores.size() - scoreIndex;
-        while (
-          lengthOfArr <= numTeams
-        ) { // implement validation  checks on runtine creation of these arr, save metod creation
+        while (lengthOfArr <= numTeams) { // implement validation  checks on runtine creation of these arr, save metod creation
           tempArr[lengthOfArr - 1] = scores.get(currI).get(0);
           if (!scores.get(i).equals(scores.get(currI))) {
             scoreIndex++;
@@ -102,6 +91,7 @@ public class Matchmaking {
         }
       }
     }
+    System.out.println(results);
     return results;
   }
 
@@ -113,15 +103,16 @@ public class Matchmaking {
     }
     return sum == 0;
   }
-
-  private static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
-    return groupNums(getTreeLastRow(fillTree(numTeams), getNumParentNodes(numTeams)),getNumParentNodes(numTeams));
+  
+  public static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
+    return groupNums(getTreeLastRow(numTeams));
   }
-
-  public static List<Integer> getTreeLastRow(
-    List<Integer> list,
-    int startingIndex
-  ) {
+  ///dont touch below
+  public static List<Integer> getTreeLastRow(int numTeams)
+  {
+    return getTreeLastRow(fillTree(numTeams),getNumParentNodes(numTeams-1));
+  }
+  public static List<Integer> getTreeLastRow(List<Integer> list,int startingIndex) {
     List<Integer> tempArr = new ArrayList<Integer>();
     if (DEBUG) System.out.println(list.size() - startingIndex);
     for (int i = 0; i < list.size() - startingIndex; i++) {
@@ -131,14 +122,7 @@ public class Matchmaking {
     return tempArr;
   }
   
-
-  public static void printList(List<Integer> tree) {
-    for (int i = 0; i < tree.size(); i++) {
-      System.out.println(tree.get(i));
-    }
-  }
-
-  public static List<Integer> fillTree(int numTeams) {
+  private static List<Integer> fillTree(int numTeams) {
     List<Integer> tree = new ArrayList<Integer>();
     numTeams--;
     int numIterations = getNumParentNodes(numTeams);
@@ -170,14 +154,14 @@ public class Matchmaking {
 
     return tree;
   }
-
-  public static void populateChilds(List<Integer> binaryTree, int parentIndex) {
+  /// Populate left right child nodes from given parent index
+  private static void populateChilds(List<Integer> binaryTree, int parentIndex) {
     /// Add left right vals
     binaryTree.add(binaryTree.get(parentIndex) + 1);
     binaryTree.add(binaryTree.get(parentIndex) - 1);
   }
 
-  public static int getNumParentNodes(int rows) {
+  public static int getNumParentNodes(int rows) { // WORKS
     int sumP2 = 0;
     for (int i = 0; i < rows; i++) {
       /// Using 2^n is size of each row in tree,
@@ -187,8 +171,8 @@ public class Matchmaking {
     }
     return sumP2;
   }
-
-  public static List<Integer> maxBubbleSort(List<Integer> arr) {
+  /// Basic Bubble Sort
+  private static List<Integer> maxBubbleSort(List<Integer> arr) { //Works
     // Works,
     // Merge Sort, quick sort proved ineffective given how much each side had mirroing values of unequal sizes.
     boolean searched = false;
