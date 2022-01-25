@@ -81,7 +81,7 @@ public class Matchmaking {
         int scoreIndex = i + 1;
         int currI = scores.size() - scoreIndex;
         while (lengthOfArr <= numTeams) { // implement validation  checks on runtine creation of these arr, save metod creation
-          tempArr[lengthOfArr - 1] = scores.get(currI).get(0);
+          tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
           if (!scores.get(i).equals(scores.get(currI))) {
             scoreIndex++;
           }
