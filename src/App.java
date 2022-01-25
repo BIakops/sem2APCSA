@@ -9,9 +9,10 @@ public class App {
         // System.out.println(a[0] + " and " + a[1]);
         // System.out.println(s.fibo(5));
         // System.out.println(smth.bigsmall(new double[] { 0.0, -1, 15, 200 })[0]);
-        List<Integer> testArr = Matchmaking.fillTree(4);
-
-        Matchmaking.RoundRobin(4, 2);
-        System.out.println("");
+        List<Integer> testArr = Matchmaking.fillTree(5);
+        testArr = Matchmaking.getTreeLastRow(testArr, Matchmaking.getNumParentNodes(4));
+        System.out.println(testArr);
+        Matchmaking.groupNumCheck(5);
+        // Matchmaking.RoundRobin(5, 3);
     }
 }
