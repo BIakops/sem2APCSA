@@ -73,4 +73,12 @@ public class smth {
         System.out.println(maxI + ", " + minI);
         return new double[] { maxI, minI };
     }
+
+    private void testC6lass(int a) {
+
+    }
+
+    private void testClass(int a) {
+
+    }
 }
