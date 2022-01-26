@@ -70,10 +70,16 @@ public class Matchmaking {
   public static ArrayList<int[]> getScores(int numTeams) {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
-    for (int i = 0;i < (int)Math.round(scores.size() / 2);i++) { /// Iterate through half,
+    System.out.println((int)Math.round(scores.size()/2));
+    for (int i = 0;i < (int)Math.round(scores.size() / 2);i++) {
+     System.out.println(scores.get(i).get(0)); 
+      
+      
+      
+      /// Iterate through half,
       for (int j = 0; j < scores.get(i).size(); j++) {
         int[] tempArr = new int[numTeams];
-        int lengthOfArr = 0;
+        int lengthOfArr = 1;
         for (int k = 0; k < j; k++) { /// Add up in curr index
           tempArr[k] = scores.get(j).get(k);
           lengthOfArr++;
@@ -87,6 +93,7 @@ public class Matchmaking {
           }
         }
         if (isValid(tempArr)) {
+          printIntArr(tempArr);
           results.add(tempArr);
         }
       }
@@ -94,7 +101,14 @@ public class Matchmaking {
     System.out.println(results);
     return results;
   }
-
+  private static void printIntArr(int[] arr)
+  {
+    for(int i : arr)
+    {
+      System.out.println(i);
+    }
+  }
+  ///dont touch below
   private static boolean isValid(int[] arr) {
     /// Sum of all team values must == 0
     int sum = 0;
@@ -103,16 +117,14 @@ public class Matchmaking {
     }
     return sum == 0;
   }
-  
-  public static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
+  private static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
     return groupNums(getTreeLastRow(numTeams));
-  }
-  ///dont touch below
+  } 
   public static List<Integer> getTreeLastRow(int numTeams)
   {
     return getTreeLastRow(fillTree(numTeams),getNumParentNodes(numTeams-1));
   }
-  public static List<Integer> getTreeLastRow(List<Integer> list,int startingIndex) {
+  private static List<Integer> getTreeLastRow(List<Integer> list,int startingIndex) {
     List<Integer> tempArr = new ArrayList<Integer>();
     if (DEBUG) System.out.println(list.size() - startingIndex);
     for (int i = 0; i < list.size() - startingIndex; i++) {
@@ -120,8 +132,7 @@ public class Matchmaking {
     }
     tempArr = maxBubbleSort(tempArr);
     return tempArr;
-  }
-  
+  }  
   private static List<Integer> fillTree(int numTeams) {
     List<Integer> tree = new ArrayList<Integer>();
     numTeams--;

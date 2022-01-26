@@ -12,7 +12,7 @@ public class App {
         List<Integer> testArr  =  Matchmaking.getTreeLastRow(5);
 
         System.out.println(testArr);
-        System.out.println(Matchmaking.getScores(5));
+        System.out.println(Matchmaking.getScores(4));
         // Matchmaking.RoundRobin(5, 3);
     }
 }
