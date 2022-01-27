@@ -80,12 +80,11 @@ public class Matchmaking {
         int[] tempArr = new int[numTeams];
         int lengthOfArr = 1;
         for (int k = 0; k <= j; k++) { /// Add up in curr index
-          tempArr[k] = scores.get(j).get(k);
+          tempArr[k] = scores.get(j).get(0);
           lengthOfArr++;
 
         }
-        int scoreIndex = i + 1;
-        int currI = scores.size() - scoreIndex;
+        int currI = scores.size() - 1;
         while (lengthOfArr <= numTeams) { // implement validation checks on runtine creation of these arr, save metod
                                           // creation
           tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
