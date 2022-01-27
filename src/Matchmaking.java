@@ -74,29 +74,39 @@ public class Matchmaking {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
     System.out.println((int) Math.round((double) scores.size() / 2));
+    /// Not all results showing
+    /// for 5 teams the 2,0,0,0,-2 isnt showing up.
     for (int i = 0; i < Math.round((double) scores.size() / 2); i++) {
       /// Iterate through half,
       for (int j = 0; j < scores.get(i).size(); j++) {
-        int[] tempArr = new int[numTeams];
-        int lengthOfArr = 1;
-        for (int k = 0; k <= j; k++) { /// Add up in curr index
-          tempArr[k] = scores.get(j).get(0);
-          lengthOfArr++;
 
-        }
-        int currI = scores.size() - 1;
-        while (lengthOfArr <= numTeams) { // implement validation checks on runtine creation of these arr, save metod
-                                          // creation
-          tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
-          if (!scores.get(i).equals(scores.get(currI))) {
-            currI--;
+        for (int l = scores.size() - 1; l > i; l--) {
+          int[] tempArr = new int[numTeams];
+          int lengthOfArr = 0;
+          for (int k = 0; k <= j; k++) { /// Add up in curr index
+            if (k < numTeams) {
+              tempArr[k] = scores.get(i).get(0);
+              lengthOfArr++;
+            } else {
+              break;
+            }
+
           }
-          lengthOfArr++;
+          int currI = l;
+          while (lengthOfArr <= numTeams) { // implement validation checks on runtine creation of these arr, save metod
+            // creation
+            tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
+            if (!scores.get(i).equals(scores.get(currI))) {
+              currI--;
+            }
+            lengthOfArr++;
+          }
+          if (isValid(tempArr)) {
+            printIntArr(tempArr);
+            results.add(tempArr);
+          }
         }
-        if (isValid(tempArr)) {
-          printIntArr(tempArr);
-          results.add(tempArr);
-        }
+
       }
     }
     // Test Comment
