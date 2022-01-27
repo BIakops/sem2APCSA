@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,17 +28,20 @@ public class Matchmaking {
       if (arr.get(i) == prevInt) {
         temp.add(arr.get(i));
       } else {
-        
-        finalArray.add(new ArrayList<>( temp)); // Make sure it refrences a new arr not the current one, otherwise it'll rewrite.
-        if(DEBUG) System.out.println(finalArray + " " + prevInt);
+
+        finalArray.add(new ArrayList<>(temp)); // Make sure it refrences a new arr not the current one, otherwise it'll
+                                               // rewrite.
+        if (DEBUG)
+          System.out.println(finalArray + " " + prevInt);
         temp.clear();
         temp.add(arr.get(i));
         prevInt = arr.get(i);
       }
-      finalArray.add(new ArrayList<>(temp));
-      
+
     }
-    if(DEBUG) System.out.println(finalArray);
+    finalArray.add(new ArrayList<>(temp));
+    if (DEBUG)
+      System.out.println(finalArray);
     return finalArray;
   }
 
@@ -50,47 +54,45 @@ public class Matchmaking {
     boolean tieOccurs = false;
     int numTies = 0;
     for (int[] scores : results) {
-      if (
-        teamsAdvancing < scores.length &&
-        scores[teamsAdvancing - 1] == scores[teamsAdvancing]
-      ) {
+      if (teamsAdvancing < scores.length &&
+          scores[teamsAdvancing - 1] == scores[teamsAdvancing]) {
         tieOccurs = true;
         numTies++;
       }
     }
-    if (tieOccurs) System.out.println(
-      "Tie occurs, tiebreaker measures suggested. Probability occuring is " +
-      (float) numTies /
-      results.size() *
-      100 +
-      "%"
-    );
+    if (tieOccurs)
+      System.out.println(
+          "Tie occurs, tiebreaker measures suggested. Probability occuring is " +
+              (float) numTies /
+                  results.size() *
+                  100
+              +
+              "%");
   }
 
   public static ArrayList<int[]> getScores(int numTeams) {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
-    System.out.println((int)Math.round(scores.size()/2));
-    for (int i = 0;i < (int)Math.round(scores.size() / 2);i++) {
-     System.out.println(scores.get(i).get(0)); 
-      
-      
-      
+    System.out.println((int) Math.round((double) scores.size() / 2));
+    for (int i = 0; i < Math.round((double) scores.size() / 2); i++) {
       /// Iterate through half,
       for (int j = 0; j < scores.get(i).size(); j++) {
         int[] tempArr = new int[numTeams];
         int lengthOfArr = 1;
-        for (int k = 0; k < j; k++) { /// Add up in curr index
+        for (int k = 0; k <= j; k++) { /// Add up in curr index
           tempArr[k] = scores.get(j).get(k);
           lengthOfArr++;
+
         }
         int scoreIndex = i + 1;
         int currI = scores.size() - scoreIndex;
-        while (lengthOfArr <= numTeams) { // implement validation  checks on runtine creation of these arr, save metod creation
+        while (lengthOfArr <= numTeams) { // implement validation checks on runtine creation of these arr, save metod
+                                          // creation
           tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
           if (!scores.get(i).equals(scores.get(currI))) {
-            scoreIndex++;
+            currI--;
           }
+          lengthOfArr++;
         }
         if (isValid(tempArr)) {
           printIntArr(tempArr);
@@ -98,18 +100,18 @@ public class Matchmaking {
         }
       }
     }
-    //Test Comment
+    // Test Comment
     System.out.println(results);
     return results;
   }
-  private static void printIntArr(int[] arr)
-  {
-    for(int i : arr)
-    {
+
+  private static void printIntArr(int[] arr) {
+    for (int i : arr) {
       System.out.println(i);
     }
   }
-  ///dont touch below
+
+  /// dont touch below
   private static boolean isValid(int[] arr) {
     /// Sum of all team values must == 0
     int sum = 0;
@@ -118,27 +120,31 @@ public class Matchmaking {
     }
     return sum == 0;
   }
-  private static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
+
+  public static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
     return groupNums(getTreeLastRow(numTeams));
-  } 
-  public static List<Integer> getTreeLastRow(int numTeams)
-  {
-    return getTreeLastRow(fillTree(numTeams),getNumParentNodes(numTeams-1));
   }
-  private static List<Integer> getTreeLastRow(List<Integer> list,int startingIndex) {
+
+  public static List<Integer> getTreeLastRow(int numTeams) {
+    return getTreeLastRow(fillTree(numTeams), getNumParentNodes(numTeams - 1));
+  }
+
+  private static List<Integer> getTreeLastRow(List<Integer> list, int startingIndex) {
     List<Integer> tempArr = new ArrayList<Integer>();
-    if (DEBUG) System.out.println(list.size() - startingIndex);
+    if (DEBUG)
+      System.out.println(list.size() - startingIndex);
     for (int i = 0; i < list.size() - startingIndex; i++) {
       tempArr.add(list.get(startingIndex + i));
     }
     tempArr = maxBubbleSort(tempArr);
     return tempArr;
-  }  
+  }
+
   private static List<Integer> fillTree(int numTeams) {
     List<Integer> tree = new ArrayList<Integer>();
     numTeams--;
     int numIterations = getNumParentNodes(numTeams);
-    //System.out.println(getNumParentNodes(numTeams));
+    // System.out.println(getNumParentNodes(numTeams));
     // = num times to iterate to create tree
     // I.e 2 teams means 3 nodes i=0 i<=numIterations
     /// 0
@@ -166,6 +172,7 @@ public class Matchmaking {
 
     return tree;
   }
+
   /// Populate left right child nodes from given parent index
   private static void populateChilds(List<Integer> binaryTree, int parentIndex) {
     /// Add left right vals
@@ -183,10 +190,12 @@ public class Matchmaking {
     }
     return sumP2;
   }
+
   /// Basic Bubble Sort
-  private static List<Integer> maxBubbleSort(List<Integer> arr) { //Works
+  private static List<Integer> maxBubbleSort(List<Integer> arr) { // Works
     // Works,
-    // Merge Sort, quick sort proved ineffective given how much each side had mirroing values of unequal sizes.
+    // Merge Sort, quick sort proved ineffective given how much each side had
+    // mirroing values of unequal sizes.
     boolean searched = false;
 
     while (!searched) {
@@ -194,7 +203,7 @@ public class Matchmaking {
 
       for (int i = 0; i < arr.size() - 1; i++) {
         if (arr.get(i) < arr.get(i + 1)) {
-          //Swap nodes
+          // Swap nodes
           int temp = arr.get(i + 1);
           arr.set(i + 1, arr.get(i));
           arr.set(i, temp);
