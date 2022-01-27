@@ -70,7 +70,7 @@ public class Matchmaking {
               "%");
   }
 
-  public static ArrayList<int[]> getScores(int numTeams) {
+  private static ArrayList<int[]> getScores(int numTeams) {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
     System.out.println((int) Math.round((double) scores.size() / 2));
@@ -82,35 +82,38 @@ public class Matchmaking {
 
         for (int l = scores.size() - 1; l > i; l--) {
           int[] tempArr = new int[numTeams];
-          int lengthOfArr = 0;
-          for (int k = 0; k <= j; k++) { /// Add up in curr index
+          int lengthOfArr = 1;
+          tempArr[0] = scores.get(i).get(0);
+          for (int k = 1; k <= j; k++) { /// Add up in curr index
             if (k < numTeams) {
               tempArr[k] = scores.get(i).get(0);
               lengthOfArr++;
             } else {
               break;
             }
-
           }
+          if (lengthOfArr == numTeams - 1)
+            break;
           int currI = l;
-          while (lengthOfArr <= numTeams) { // implement validation checks on runtine creation of these arr, save metod
+          while (lengthOfArr < numTeams) { // implement validation checks on runtine creation of these arr, save metod
             // creation
-            tempArr[lengthOfArr - 1] = scores.get(currI).get(0); // Error part
-            if (!scores.get(i).equals(scores.get(currI))) {
+            tempArr[lengthOfArr] = scores.get(currI).get(0);
+            if (!scores.get(i).equals(scores.get(currI - 1))) { // THe main problem solved.
               currI--;
             }
             lengthOfArr++;
           }
           if (isValid(tempArr)) {
-            printIntArr(tempArr);
+            if (DEBUG)
+              printIntArr(tempArr);
             results.add(tempArr);
           }
         }
-
       }
     }
     // Test Comment
-    System.out.println(results);
+    if (DEBUG)
+      System.out.println(results);
     return results;
   }
 
@@ -130,11 +133,11 @@ public class Matchmaking {
     return sum == 0;
   }
 
-  public static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
+  private static ArrayList<ArrayList<Integer>> createScores(int numTeams) {
     return groupNums(getTreeLastRow(numTeams));
   }
 
-  public static List<Integer> getTreeLastRow(int numTeams) {
+  private static List<Integer> getTreeLastRow(int numTeams) {
     return getTreeLastRow(fillTree(numTeams), getNumParentNodes(numTeams - 1));
   }
 
