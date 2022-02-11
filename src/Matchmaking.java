@@ -73,7 +73,7 @@ public class Matchmaking {
   private static ArrayList<int[]> getScores(int numTeams) {
     ArrayList<ArrayList<Integer>> scores = createScores(numTeams);
     ArrayList<int[]> results = new ArrayList<>();
-    System.out.println((int) Math.round((double) scores.size() / 2));
+
     /// Not all results showing
     /// for 5 teams the 2,0,0,0,-2 isnt showing up.
     for (int i = 0; i < Math.round((double) scores.size() / 2); i++) {
@@ -112,8 +112,10 @@ public class Matchmaking {
       }
     }
     // Test Comment
-    if (DEBUG)
+    if (DEBUG) {
       System.out.println(results);
+      System.out.println((int) Math.round((double) scores.size() / 2));
+    }
     return results;
   }
 

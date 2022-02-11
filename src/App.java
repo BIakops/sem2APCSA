@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.ArrayList;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -9,7 +9,13 @@ public class App {
         // System.out.println(s.fibo(5));
         // System.out.println(smth.bigsmall(new double[] { 0.0, -1, 15, 200 })[0]);
 
-        Matchmaking.RoundRobin(16, 4);
-        // Matchmaking.RoundRobin(5, 3);
+        // Matchmaking.RoundRobin(5, 2);
+        // Matchmaking.RoundRobin(10, 7);
+
+        Solver a = new Solver(Message.message3);
+        ArrayList<String> result = a.findMessage();
+        for (int i = 0; i < result.size(); i++) {
+            System.out.print(result.get(i) + " ");
+        }
     }
 }
