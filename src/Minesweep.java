@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//This now should be able to commit
 public class Minesweep {
     class gridNode {
         char value;
