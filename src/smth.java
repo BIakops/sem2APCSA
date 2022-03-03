@@ -74,11 +74,4 @@ public class smth {
         return new double[] { maxI, minI };
     }
 
-    private void testC6lass(int a) {
-
-    }
-
-    private void testClass(int a) {
-
-    }
 }

@@ -12,10 +12,19 @@ public class App {
         // Matchmaking.RoundRobin(5, 2);
         // Matchmaking.RoundRobin(10, 7);
 
-        Solver a = new Solver(Message.message3);
-        ArrayList<String> result = a.findMessage();
-        for (int i = 0; i < result.size(); i++) {
-            System.out.print(result.get(i) + " ");
-        }
+        // Solver a = new Solver(Message.message3);
+        // ArrayList<String> result = a.findMessage();
+        // for (int i = 0; i < result.size(); i++) {
+        // System.out.print(result.get(i) + " ");
+        // }
+        // Minesweep test = new Minesweep(5, 5, 2);
+        // test.printG();
+        // System.out.println();
+        // test.printGrid(test.ansGrid);
+        // System.out.println();
+        // test.checkInput(0, 0);
+        // System.out.println();
+        // test.printGrid(test.grid);
+        Minesweep.startSession();
     }
 }
