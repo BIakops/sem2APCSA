@@ -62,6 +62,17 @@ public class Minesweep {
 
     };
 
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";
+    public static final String WHITE_BACKGROUND = "\033[47m";
     public int row;
     public int col;
     public Character[][] ansGrid; // For Convience in checkInput
@@ -156,29 +167,67 @@ public class Minesweep {
         return ansGrid;
     }
 
-    public static void startSession() { // Need To Debug
+    void setDiff(int d) {
+        switch (d) {
+            case 1:
+                difficulty = 0.89578;
+                break;
+            case 2:
+                difficulty = 0.8;
+                break;
+            case 3:
+                difficulty = 0.68;
+                break;
+            case 4:
+                difficulty = 0.5;
+                break;
+            case 5:
+                difficulty = 0.3;
+                break;
+        }
+    }
+
+    public static void startSession() { // Need Account for bad Data
+        int row = 0;
+        int col = 0;
+        int mine = 0;
+        int diff = 0;
         Scanner session = new Scanner(System.in);
-        System.out.println("Enter the number of rows: ");
-        int row = session.nextInt();
-        System.out.println("Enter the number of columns: ");
-        int col = session.nextInt();
-        System.out.println("Enter the number of mines: ");
-        int mine = session.nextInt();
+        while (row <= 0 || col <= 0 || mine <= 0 || diff <= 0 || diff > 5) {
+            System.out.println("Please enter the number of rows, columns, and mines in the grid");
+            row = session.nextInt();
+            col = session.nextInt();
+            mine = session.nextInt();
+            System.out.println("Please enter the difficulty of the game (1-5)");
+            diff = session.nextInt();
+        }
+
         Minesweep game = new Minesweep(row, col, mine);
+        game.setDiff(diff);
         game.gameInstance = true;
-        System.out.println("Enter the row: ");
-        int rt = session.nextInt();
-        System.out.println("Enter the column: ");
-        int ct = session.nextInt();
-        if (rt < 0 || rt >= game.row || ct < 0 || ct >= game.col) {
-            System.out.println("Invalid Input");
+        while (true) {
+            System.out.println("Enter the row: ");
+            int rt = session.nextInt();
+            System.out.println("Enter the column: ");
+            int ct = session.nextInt();
+            if (rt < 0 || rt >= game.row || ct < 0 || ct >= game.col) {
+                System.out.println("Invalid Input");
+                continue;
+            }
+            boolean i = false;
+            while (!i) {
+                if (game.gridN[rt][ct].getVal() == '*') {
+                    game.ansGrid = game.ansGridCreate();
+                } else {
+                    game.checkInput(rt, ct);
+                    i = true;
+                }
 
+            }
+            if (i) {
+                break;
+            }
         }
-        while (game.gridN[rt][ct].value == '*') {
-            game.ansGrid = game.ansGridCreate();
-
-        }
-        game.checkInput(rt, ct);
         game.printGrid(game.gridN);
         while (game.gameInstance && !game.isWin()) {
 
@@ -187,15 +236,17 @@ public class Minesweep {
             System.out.println("Enter the column: ");
             int c = session.nextInt();
             if (r < 0 || r >= game.row || c < 0 || c >= game.col) {
-                System.out.println("Invalid Input");
+                System.out.println("Invalid Input, please try again:");
                 continue;
             }
             System.out.println("Flag or Reveal? (f/r): ");
-            String flag = session.next();
-            if (flag.equals("f")) {
+            char flag = session.next().charAt(0);
+            if (flag == 'f') {
                 game.flag(r, c);
-            } else if (flag.equals("r")) {
+            } else if (flag == 'r') {
                 game.checkInput(r, c);
+            } else {
+                System.out.println("Invalid Input");
             }
             if (game.gameInstance == true) {
                 game.printGrid(game.gridN);
@@ -228,10 +279,38 @@ public class Minesweep {
         }
     }
 
+    void printChar(gridNode t, boolean endGame) {
+        if (t.reveal == 0) {
+            if (t.value == '1') {
+                System.out.print(WHITE_BACKGROUND + ANSI_GREEN + t.value + ANSI_RESET);
+            } else if (t.value == '2') {
+                System.out.print(WHITE_BACKGROUND + ANSI_YELLOW + t.value + ANSI_RESET);
+            } else if (t.value == '3') {
+                System.out.print(WHITE_BACKGROUND + ANSI_PURPLE + t.value + ANSI_RESET);
+            } else if (t.value == '4') {
+                System.out.print(WHITE_BACKGROUND + ANSI_CYAN + t.value + ANSI_RESET);
+            } else if (t.value == '5') {
+                System.out.print(WHITE_BACKGROUND + ANSI_BLUE + t.value + ANSI_RESET);
+            } else if (t.value == '6') {
+                System.out.print(ANSI_WHITE + t.value + ANSI_RESET);
+            } else if (t.value == '.') {
+                System.out.print(WHITE_BACKGROUND + ANSI_BLACK + t.getVal() + ANSI_RESET);
+            } else { // for 7 8 9 nodes
+                System.out.print(ANSI_BLACK + CYAN_BACKGROUND_BRIGHT + t.value + ANSI_RESET);
+            }
+        } else if (endGame && t.value == '*') {
+            System.out.print(WHITE_BACKGROUND + ANSI_RED + t.value + ANSI_RESET);
+        } else if (t.reveal == 1) {
+            System.out.print(WHITE_BACKGROUND + ANSI_RED + t.getVal() + ANSI_RESET);
+        } else {
+            System.out.print(WHITE_BACKGROUND + ANSI_BLACK + t.getVal() + ANSI_RESET);
+        }
+    }
+
     void printGrid(Minesweep.gridNode[][] gridN) {
         for (int i = 0; i < gridN.length; i++) {
             for (int j = 0; j < gridN[i].length; j++) {
-                System.out.print(gridN[i][j].getVal());
+                printChar(gridN[i][j], false);
             }
             System.out.println();
         }
@@ -239,15 +318,15 @@ public class Minesweep {
 
     private void loseGame() {
         gameInstance = false;
-        printGridS(ansGrid);
+        printGridS();
         System.out.println("You Lose");
     }
 
-    private void printGridS(Character[][] ansGrid2) {
+    private void printGridS() {
         // Print grid slowly
-        for (int i = 0; i < ansGrid2.length; i++) {
-            for (int j = 0; j < ansGrid2[i].length; j++) {
-                System.out.print(ansGrid2[i][j]);
+        for (int i = 0; i < gridN.length; i++) {
+            for (int j = 0; j < gridN[i].length; j++) {
+                printChar(gridN[i][j], true);
                 try {
                     Thread.sleep(10000 / (row * col));
                 } catch (InterruptedException e) {
@@ -327,20 +406,5 @@ public class Minesweep {
             }
             System.out.println();
         }
-    }
-
-    // Create a compare method between ansGrid and Grid
-    // If the two grids are equal, return true
-    // If the two grids are not equal, return false
-    public boolean compare(char[][] ansGrid, char[][] grid) {
-
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (ansGrid[i][j] != grid[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
