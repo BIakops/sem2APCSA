@@ -194,21 +194,24 @@ public class Minesweep {
         int diff = 0;
         Scanner session = new Scanner(System.in);
         while (row <= 0 || col <= 0 || mine <= 0 || diff <= 0 || diff > 5) {
-            System.out.println("Please enter the number of rows, columns, and mines in the grid");
+            System.out.print("Number of Rows: ");
             row = session.nextInt();
+            System.out.print("Number of Columns: ");
             col = session.nextInt();
+            System.out.print("Number of Mines: ");
             mine = session.nextInt();
-            System.out.println("Please enter the difficulty of the game (1-5)");
+            System.out.print("Please enter the difficulty of the game (1-5): ");
             diff = session.nextInt();
+
         }
 
         Minesweep game = new Minesweep(row, col, mine);
         game.setDiff(diff);
         game.gameInstance = true;
         while (true) {
-            System.out.println("Enter the row: ");
+            System.out.print("Enter the row: ");
             int rt = session.nextInt();
-            System.out.println("Enter the column: ");
+            System.out.print("Enter the column: ");
             int ct = session.nextInt();
             if (rt < 0 || rt >= game.row || ct < 0 || ct >= game.col) {
                 System.out.println("Invalid Input");
@@ -217,6 +220,7 @@ public class Minesweep {
             boolean i = false;
             while (!i) {
                 if (game.gridN[rt][ct].getVal() == '*') {
+                    game.gridN = new gridNode[game.row][game.col];
                     game.ansGrid = game.ansGridCreate();
                 } else {
                     game.checkInput(rt, ct);
@@ -231,15 +235,15 @@ public class Minesweep {
         game.printGrid(game.gridN);
         while (game.gameInstance && !game.isWin()) {
 
-            System.out.println("Enter the row: ");
+            System.out.print("Enter the row: ");
             int r = session.nextInt();
-            System.out.println("Enter the column: ");
+            System.out.print("Enter the column: ");
             int c = session.nextInt();
             if (r < 0 || r >= game.row || c < 0 || c >= game.col) {
                 System.out.println("Invalid Input, please try again:");
                 continue;
             }
-            System.out.println("Flag or Reveal? (f/r): ");
+            System.out.print("Flag or Reveal? (f/r): ");
             char flag = session.next().charAt(0);
             if (flag == 'f') {
                 game.flag(r, c);
