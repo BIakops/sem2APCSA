@@ -231,24 +231,42 @@ public class Minesweep {
         int rt = 0;
         int ct = 0;
         while (true) {
-            System.out.print("Enter the row: ");
-            if (session.hasNextInt()) {
-                rt = session.nextInt();
-            } else {
-                session.next();
-                System.out.println("Invalid Input");
-                continue;
+            while (true) {
+                System.out.print("Enter the row: ");
+                if (session.hasNextInt()) {
+                    rt = session.nextInt();
+                    if ((rt < game.row && rt >= 0)) {
+                        break;
+                    } else {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
+                } else {
+                    session.next();
+                    System.out.println("Invalid Input");
+                    continue;
+                }
             }
-            System.out.print("Enter the column: ");
-            if (session.hasNextInt()) {
-                ct = session.nextInt();
-            } else {
-                session.next();
-                System.out.println("Invalid Input");
-                continue;
+
+            while (true) {
+                System.out.print("Enter the column: ");
+                if (session.hasNextInt()) {
+                    ct = session.nextInt();
+                    if ((ct < game.col && ct >= 0)) {
+                        break;
+                    } else {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
+                } else {
+                    session.next();
+                    System.out.println("Invalid Input");
+                    continue;
+                }
             }
+
             boolean i = false;
-            while (!i) {
+            while (i == false) {
                 if (game.gridN[rt][ct].getVal() == '*') {
                     game.gridN = new gridNode[game.row][game.col];
                     game.ansGrid = game.ansGridCreate();
@@ -269,8 +287,15 @@ public class Minesweep {
             while (true) {
                 System.out.print("Enter the row: ");
                 if (session.hasNextInt()) {
+
                     r = session.nextInt();
-                    break;
+                    if ((r < game.row && r >= 0)) {
+                        break;
+                    } else {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
+
                 } else {
                     session.next();
                     System.out.println("Invalid Input");
@@ -281,7 +306,12 @@ public class Minesweep {
                 System.out.print("Enter the column: ");
                 if (session.hasNextInt()) {
                     c = session.nextInt();
-                    break;
+                    if ((c < game.col && c >= 0)) {
+                        break;
+                    } else {
+                        System.out.println("Invalid Input");
+                        continue;
+                    }
                 } else {
                     session.next();
                     System.out.println("Invalid Input");
@@ -309,7 +339,9 @@ public class Minesweep {
 
         }
         session.close();
-        System.out.println("YOU WIN!");
+        if (game.isWin()) {
+            System.out.println("You Win!");
+        }
 
     }
 
