@@ -89,32 +89,26 @@ public class Minesweep {
         ansGrid = ansGridCreate();
     }
 
-    Minesweep(int r, int c, int mM) {
+    Minesweep(int r, int c, int mM, int diff) {
         row = r;
         col = c;
         maxMine = mM;
         gridN = new gridNode[row][col];
+        difficulty = setDiff(diff);
         ansGrid = ansGridCreate();
 
     }
 
     Character[][] ansGridCreate() {
         Character[][] ansGrid = new Character[row][col];
+        ArrayList<int[]> mineLocations = new ArrayList<int[]>();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                if (Math.random() > difficulty) {
+                if (Math.random() * 2 > difficulty) {
                     ansGrid[i][j] = '*'; // Notation for mine
+                    mineLocations.add(new int[] { i, j });
                 } else {
                     ansGrid[i][j] = '0'; // Notation for empty space
-                }
-            }
-        }
-        ArrayList<int[]> mineLocations = new ArrayList<int[]>();
-
-        for (int i = 0; i < row; i++) { // Find all mine locations
-            for (int j = 0; j < col; j++) {
-                if (ansGrid[i][j] == '*') {
-                    mineLocations.add(new int[] { i, j });
                 }
             }
         }
@@ -124,6 +118,7 @@ public class Minesweep {
                 ansGrid[loc[0]][loc[1]] = '0';
             }
         }
+        mineLocations.clear();
         for (int i = 0; i < row; i++) { // Do an initial BFS to find all empty spaces and assign correct number if mine
                                         // is near
             for (int j = 0; j < col; j++) {
@@ -167,24 +162,25 @@ public class Minesweep {
         return ansGrid;
     }
 
-    void setDiff(int d) {
+    static double setDiff(int d) {
         switch (d) {
             case 1:
-                difficulty = 0.89578;
-                break;
+                return 0.89578;
+
             case 2:
-                difficulty = 0.8;
-                break;
+                return 0.8;
+
             case 3:
-                difficulty = 0.68;
-                break;
+                return 0.68;
+
             case 4:
-                difficulty = 0.5;
-                break;
+                return 0.5;
+
             case 5:
-                difficulty = 0.3;
-                break;
+                return 0.3;
+
         }
+        return 0;
     }
 
     public static void startSession() { // Need Account for bad Data
@@ -195,25 +191,59 @@ public class Minesweep {
         Scanner session = new Scanner(System.in);
         while (row <= 0 || col <= 0 || mine <= 0 || diff <= 0 || diff > 5) {
             System.out.print("Number of Rows: ");
-            row = session.nextInt();
+            if (session.hasNextInt()) {
+                row = session.nextInt();
+            } else {
+                session.next();
+                System.out.println("Invalid Input");
+                continue;
+            }
             System.out.print("Number of Columns: ");
-            col = session.nextInt();
+            if (session.hasNextInt()) {
+                col = session.nextInt();
+            } else {
+                session.next();
+                System.out.println("Invalid Input");
+                continue;
+            }
             System.out.print("Number of Mines: ");
-            mine = session.nextInt();
+            if (session.hasNextInt()) {
+                mine = session.nextInt();
+            } else {
+                session.next();
+                System.out.println("Invalid Input");
+                continue;
+            }
             System.out.print("Please enter the difficulty of the game (1-5): ");
-            diff = session.nextInt();
+            if (session.hasNextInt()) {
+                mine = session.nextInt();
+                break;
+            } else {
+                session.next();
+                System.out.println("Invalid Input");
+                continue;
+            }
 
         }
 
-        Minesweep game = new Minesweep(row, col, mine);
-        game.setDiff(diff);
+        Minesweep game = new Minesweep(row, col, mine, diff);
         game.gameInstance = true;
+        int rt = 0;
+        int ct = 0;
         while (true) {
             System.out.print("Enter the row: ");
-            int rt = session.nextInt();
+            if (session.hasNextInt()) {
+                rt = session.nextInt();
+            } else {
+                session.next();
+                System.out.println("Invalid Input");
+                continue;
+            }
             System.out.print("Enter the column: ");
-            int ct = session.nextInt();
-            if (rt < 0 || rt >= game.row || ct < 0 || ct >= game.col) {
+            if (session.hasNextInt()) {
+                ct = session.nextInt();
+            } else {
+                session.next();
                 System.out.println("Invalid Input");
                 continue;
             }
@@ -234,30 +264,52 @@ public class Minesweep {
         }
         game.printGrid(game.gridN);
         while (game.gameInstance && !game.isWin()) {
+            int r;
+            int c;
+            while (true) {
+                System.out.print("Enter the row: ");
+                if (session.hasNextInt()) {
+                    r = session.nextInt();
+                    break;
+                } else {
+                    session.next();
+                    System.out.println("Invalid Input");
+                    continue;
+                }
+            }
+            while (true) {
+                System.out.print("Enter the column: ");
+                if (session.hasNextInt()) {
+                    c = session.nextInt();
+                    break;
+                } else {
+                    session.next();
+                    System.out.println("Invalid Input");
+                    continue;
+                }
+            }
+            while (true) {
+                System.out.print("Flag or Reveal? (f/r): ");
+                char flag = session.next().charAt(0);
+                if (flag == 'f') {
+                    game.flag(r, c);
+                    break;
+                } else if (flag == 'r') {
+                    game.checkInput(r, c);
+                    break;
+                } else {
+                    System.out.println("Invalid Input");
+                    continue;
+                }
+            }
 
-            System.out.print("Enter the row: ");
-            int r = session.nextInt();
-            System.out.print("Enter the column: ");
-            int c = session.nextInt();
-            if (r < 0 || r >= game.row || c < 0 || c >= game.col) {
-                System.out.println("Invalid Input, please try again:");
-                continue;
-            }
-            System.out.print("Flag or Reveal? (f/r): ");
-            char flag = session.next().charAt(0);
-            if (flag == 'f') {
-                game.flag(r, c);
-            } else if (flag == 'r') {
-                game.checkInput(r, c);
-            } else {
-                System.out.println("Invalid Input");
-            }
             if (game.gameInstance == true) {
                 game.printGrid(game.gridN);
             }
 
         }
         session.close();
+        System.out.println("YOU WIN!");
 
     }
 
@@ -266,6 +318,9 @@ public class Minesweep {
             for (int j = 0; j < col; j++) {
                 if (gridN[i][j].value == '*' && gridN[i][j].reveal == 2) {
                     return false;
+                }
+                if (gridN[i][j].value == '*' && gridN[i][j].reveal == 1) {
+                    continue;
                 }
                 if (gridN[i][j].reveal != 0) {
                     return false;
