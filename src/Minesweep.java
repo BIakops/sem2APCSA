@@ -15,6 +15,13 @@ public class Minesweep {
         public int col;
         public int reveal;
 
+        gridNode() {
+            value = '.';
+            row = 0;
+            col = 0;
+            reveal = 0;
+        }
+
         gridNode(char v, int r, int c) {
             value = v;
             row = r;
@@ -77,9 +84,9 @@ public class Minesweep {
     public int col;
     public Character[][] ansGrid; // For Convience in checkInput
     private boolean gameInstance = false;
-    private int maxMine;
+    private int maxMine = 0;
+    private double diff;
     public gridNode[][] gridN; // To Access Row & Col of Grid
-    private double difficulty = 0.89578;
 
     Minesweep(int r, int c) {
         row = r;
@@ -93,94 +100,102 @@ public class Minesweep {
         row = r;
         col = c;
         maxMine = mM;
+        this.diff = setDiff(diff);
         gridN = new gridNode[row][col];
-        difficulty = setDiff(diff);
         ansGrid = ansGridCreate();
 
     }
 
-    Character[][] ansGridCreate() {
-        Character[][] ansGrid = new Character[row][col];
+    private Character[][] ansGridCreate() {
+        Character[][] tansGrid = new Character[row][col];
         ArrayList<int[]> mineLocations = new ArrayList<int[]>();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                if (Math.random() * 2 > difficulty) {
-                    ansGrid[i][j] = '*'; // Notation for mine
+                if (Math.random() > diff) {
+                    tansGrid[i][j] = '*'; // Notation for mine
                     mineLocations.add(new int[] { i, j });
                 } else {
-                    ansGrid[i][j] = '0'; // Notation for empty space
+                    tansGrid[i][j] = '0';
                 }
+
             }
-        }
-        if (mineLocations.size() > maxMine) { // Check if there are too many mines
-            while (mineLocations.size() > maxMine) {
-                int[] loc = mineLocations.remove((int) (Math.random() * mineLocations.size())); // Remove Randomly
-                ansGrid[loc[0]][loc[1]] = '0';
-            }
+        } // Check if there are too many mines
+        while (mineLocations.size() > maxMine) {
+            int[] loc = mineLocations.remove((int) (Math.random() * mineLocations.size())); // Remove Randomly
+            tansGrid[loc[0]][loc[1]] = '0';
         }
         mineLocations.clear();
         for (int i = 0; i < row; i++) { // Do an initial BFS to find all empty spaces and assign correct number if mine
                                         // is near
             for (int j = 0; j < col; j++) {
                 /// check all directions including diagonals for mines denoted *
-                if (ansGrid[i][j] != '*') {
-                    int temp = (int) ansGrid[i][j];
-                    if (i - 1 >= 0 && j >= 0 && ansGrid[i - 1][j] == '*') {
+                if (tansGrid[i][j] != '*') {
+                    int temp = (int) tansGrid[i][j];
+                    if (i - 1 >= 0 && j >= 0 && tansGrid[i - 1][j] == '*') {
                         temp++;
                     }
-                    if (i + 1 < row && j >= 0 && ansGrid[i + 1][j] == '*') {
+                    if (i + 1 < row && j >= 0 && tansGrid[i + 1][j] == '*') {
                         temp++;
                     }
-                    if (j - 1 >= 0 && ansGrid[i][j - 1] == '*') {
+                    if (j - 1 >= 0 && tansGrid[i][j - 1] == '*') {
                         temp++;
                     }
-                    if (j + 1 < col && ansGrid[i][j + 1] == '*') {
+                    if (j + 1 < col && tansGrid[i][j + 1] == '*') {
                         temp++;
                     }
-                    if (i - 1 >= 0 && j - 1 >= 0 && ansGrid[i - 1][j - 1] == '*') {
+                    if (i - 1 >= 0 && j - 1 >= 0 && tansGrid[i - 1][j - 1] == '*') {
                         temp++;
                     }
-                    if (i + 1 < row && j + 1 < col && ansGrid[i + 1][j + 1] == '*') {
+                    if (i + 1 < row && j + 1 < col && tansGrid[i + 1][j + 1] == '*') {
                         temp++;
                     }
-                    if (i - 1 >= 0 && j + 1 < col && ansGrid[i - 1][j + 1] == '*') {
+                    if (i - 1 >= 0 && j + 1 < col && tansGrid[i - 1][j + 1] == '*') {
                         temp++;
                     }
-                    if (i + 1 < row && j - 1 >= 0 && ansGrid[i + 1][j - 1] == '*') {
+                    if (i + 1 < row && j - 1 >= 0 && tansGrid[i + 1][j - 1] == '*') {
                         temp++;
                     }
-                    if (temp == (int) ansGrid[i][j]) {
-                        ansGrid[i][j] = '.';
+                    if (temp == (int) tansGrid[i][j]) {
+                        tansGrid[i][j] = '.';
                     } else {
-                        ansGrid[i][j] = (Character) (char) temp;
+                        tansGrid[i][j] = (Character) (char) temp;
+                    }
+                } else {
+                    int temp = 0;
+                    if (i - 1 >= 0 && j >= 0 && tansGrid[i - 1][j] == '*') {
+                        temp++;
+                    }
+                    if (i + 1 < row && j >= 0 && tansGrid[i + 1][j] == '*') {
+                        temp++;
+                    }
+                    if (j - 1 >= 0 && tansGrid[i][j - 1] == '*') {
+                        temp++;
+                    }
+                    if (j + 1 < col && tansGrid[i][j + 1] == '*') {
+                        temp++;
+                    }
+                    if (i - 1 >= 0 && j - 1 >= 0 && tansGrid[i - 1][j - 1] == '*') {
+                        temp++;
+                    }
+                    if (i + 1 < row && j + 1 < col && tansGrid[i + 1][j + 1] == '*') {
+                        temp++;
+                    }
+                    if (i - 1 >= 0 && j + 1 < col && tansGrid[i - 1][j + 1] == '*') {
+                        temp++;
+                    }
+                    if (i + 1 < row && j - 1 >= 0 && tansGrid[i + 1][j - 1] == '*') {
+                        temp++;
+                    }
+                    if (temp > 8) {
+                        tansGrid[i][j] = '8';
                     }
                 }
-                gridN[i][j] = new gridNode(ansGrid[i][j], i, j);
+                gridN[i][j] = new gridNode(tansGrid[i][j], i, j);
 
             }
         }
-        return ansGrid;
-    }
-
-    static double setDiff(int d) {
-        switch (d) {
-            case 1:
-                return 0.89578;
-
-            case 2:
-                return 0.8;
-
-            case 3:
-                return 0.68;
-
-            case 4:
-                return 0.5;
-
-            case 5:
-                return 0.3;
-
-        }
-        return 0;
+        ansGrid = tansGrid;
+        return tansGrid;
     }
 
     public static void startSession() { // Need Account for bad Data
@@ -216,7 +231,7 @@ public class Minesweep {
             }
             System.out.print("Please enter the difficulty of the game (1-5): ");
             if (session.hasNextInt()) {
-                mine = session.nextInt();
+                diff = session.nextInt();
                 break;
             } else {
                 session.next();
@@ -267,9 +282,9 @@ public class Minesweep {
 
             boolean i = false;
             while (i == false) {
-                if (game.gridN[rt][ct].getVal() == '*') {
+                if (game.gridN[rt][ct].value == '*') {
                     game.gridN = new gridNode[game.row][game.col];
-                    game.ansGrid = game.ansGridCreate();
+                    game.ansGridCreate();
                 } else {
                     game.checkInput(rt, ct);
                     i = true;
@@ -343,6 +358,23 @@ public class Minesweep {
             System.out.println("You Win!");
         }
 
+    }
+
+    double setDiff(int d) {
+        // set difficulty
+        if (d == 1) {
+            return 0.8975;
+        } else if (d == 2) {
+            return 0.7812;
+        } else if (d == 3) {
+            return 0.68231;
+        } else if (d == 4) {
+            return 0.56923;
+        } else if (d == 5) {
+            return 0.5012;
+        } else {
+            return 0.212323;
+        }
     }
 
     private boolean isWin() {

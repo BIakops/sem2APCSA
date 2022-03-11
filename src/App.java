@@ -9,8 +9,8 @@ public class App {
         // System.out.println(s.fibo(5));
         // System.out.println(smth.bigsmall(new double[] { 0.0, -1, 15, 200 })[0]);
 
-        // Matchmaking.RoundRobin(5, 2);
-        // Matchmaking.RoundRobin(10, 7);
+        Matchmaking.RoundRobin(5, 2);
+        Matchmaking.RoundRobin(10, 7);
 
         // Solver a = new Solver(Message.message3);
         // ArrayList<String> result = a.findMessage();
@@ -25,6 +25,9 @@ public class App {
         // test.checkInput(0, 0);
         // System.out.println();
         // test.printGrid(test.grid);
-        Minesweep.startSession();
+        // Minesweep.startSession();
+        // Object[] arr = { "String", 1, '0', 2.032 };
+        // System.out.println(arr[0]);
+
     }
 }
